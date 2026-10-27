@@ -1,5 +1,6 @@
 const canvas = document.querySelector("canvas")
 const ctx = canvas.getContext("2d")
+const audio = new Audio('../assets/audio.mp3')
 
 const size = 30
 let direction, loopId
@@ -9,11 +10,22 @@ const snake = [
     {x: 360, y: 300}
 ]
 
+
 const OPPOSITES = {
     ArrowUp: "ArrowDown",
     ArrowDown: "ArrowUp",
     ArrowRight: "ArrowLeft",
     ArrowLeft: "ArrowRight"
+}
+
+const randomPosition = () => {
+    const cells = canvas.width / size
+    return Math.floor(Math.random() * cells) * size
+}
+const food = {
+    x: randomPosition(),
+    y: randomPosition(),
+    color: "red"
 }
 
 const drawSnake = () => {
@@ -25,6 +37,16 @@ const drawSnake = () => {
         }
         ctx.fillRect(position.x, position.y, size, size)
     })
+}
+
+const drawFood = () => {
+    const {x, y, color} = food
+
+    ctx.fillStyle = color
+    ctx.shadowColor = color
+    ctx.shadowBlur = 6
+    ctx.fillRect(x, y, size, size)
+    ctx.shadowBlur = 0
 }
 
 const moveSnake = () => {
@@ -53,18 +75,6 @@ const moveSnake = () => {
     snake.shift()
 }
 
-const gameLoop = () => {
-    clearInterval(loopId)
-    ctx.clearRect(0, 0, 600, 600)
-    drawnGrid()
-    moveSnake()
-    drawSnake()
-
-    loopId = setTimeout(() => {
-        gameLoop()
-    }, 150)
-}
-
 const drawnGrid = () => {
     ctx.lineWidth = 1
     ctx.strokeStyle = "#191919"
@@ -82,7 +92,38 @@ const drawnGrid = () => {
     }
 }
 
+const checkEat = () => {
+    const head = snake[snake.length -1]
 
+    if(head.x == food.x && head.y == food.y){
+        snake.push(head)
+        audio.play()
+        let x = randomPosition()
+        let y = randomPosition()
+
+        while(snake.find((position) => position.x == x && position.y == y)){
+            x = randomPosition()
+            y = randomPosition()
+        }
+
+        food.x = x
+        food.y = y
+    }
+}
+
+const gameLoop = () => {
+    clearInterval(loopId)
+    ctx.clearRect(0, 0, 600, 600)
+    drawnGrid()
+    drawFood()
+    moveSnake()
+    drawSnake()
+    checkEat()
+
+    loopId = setTimeout(() => {
+        gameLoop()
+    }, 150)
+}
 
 document.addEventListener("keydown", ({ key }) => {
     if((OPPOSITES[key] && OPPOSITES[key] !== direction)){
