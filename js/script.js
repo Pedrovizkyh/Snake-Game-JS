@@ -96,18 +96,32 @@ const checkEat = () => {
     const head = snake[snake.length -1]
 
     if(head.x == food.x && head.y == food.y){
-        snake.push(head)
+        snake.unshift({...snake[0]})
         audio.play()
         let x = randomPosition()
         let y = randomPosition()
 
-        while(snake.find((position) => position.x == x && position.y == y)){
+        while(snake.some((position) => position.x === x && position.y === y)){
             x = randomPosition()
             y = randomPosition()
         }
 
         food.x = x
         food.y = y
+    }
+}
+
+const checkCollision = () => {
+    const head = snake[snake.length - 1]
+    const limit = canvas.width - size
+    
+    const hitWall = head.x < 0 || head.x > limit || head.y < 0 || head.y > limit
+    const hitSelf = snake.slice(0, -1).some(
+        (segment) => segment.x === head.x && segment.y === head.y
+    )
+
+    if(hitWall || hitSelf){
+        alert("Você perdeu!")
     }
 }
 
@@ -119,6 +133,7 @@ const gameLoop = () => {
     moveSnake()
     drawSnake()
     checkEat()
+    checkCollision()
 
     loopId = setTimeout(() => {
         gameLoop()
