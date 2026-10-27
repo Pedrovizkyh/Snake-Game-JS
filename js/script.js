@@ -4,10 +4,17 @@ const ctx = canvas.getContext("2d")
 const size = 30
 let direction, loopId
 const snake = [
-    {x: 200, y: 200},
-    {x: 230, y: 200},
-    {x: 260, y: 200}
+    {x: 300, y: 300},
+    {x: 330, y: 300},
+    {x: 360, y: 300}
 ]
+
+const OPPOSITES = {
+    ArrowUp: "ArrowDown",
+    ArrowDown: "ArrowUp",
+    ArrowRight: "ArrowLeft",
+    ArrowLeft: "ArrowRight"
+}
 
 const drawSnake = () => {
     ctx.fillStyle = "#ddd"
@@ -24,19 +31,19 @@ const moveSnake = () => {
     const head = snake[snake.length -1]
     
     switch (direction) {
-        case "right":
+        case "ArrowRight":
             snake.push({x: head.x + size, y: head.y})
             break;
         
-        case "left":
+        case "ArrowLeft":
             snake.push({x: head.x - size, y: head.y})
             break;
 
-        case "top":
+        case "ArrowUp":
             snake.push({x: head.x, y: head.y - size})
             break;
 
-        case "down":
+        case "ArrowDown":
             snake.push({x: head.x, y: head.y + size})
             break;
     
@@ -54,7 +61,13 @@ const gameLoop = () => {
 
     loopId = setTimeout(() => {
         gameLoop()
-    }, 300)
+    }, 150)
 }
+
+document.addEventListener("keydown", ({ key }) => {
+    if((OPPOSITES[key] && OPPOSITES[key] !== direction)){
+        direction = key
+    }
+})
 
 gameLoop()
