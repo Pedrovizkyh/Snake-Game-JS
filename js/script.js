@@ -2,14 +2,12 @@ const canvas = document.querySelector("canvas")
 const ctx = canvas.getContext("2d")
 
 const size = 30
-
+let direction
 const snake = [
     {x: 200, y: 200},
     {x: 230, y: 200},
     {x: 260, y: 200}
 ]
-
-let direction
 
 const drawSnake = () => {
     ctx.fillStyle = "#ddd"
@@ -24,8 +22,7 @@ const drawSnake = () => {
 
 const moveSnake = () => {
     const head = snake[snake.length -1]
-    snake.shift()
-
+    
     switch (direction) {
         case "right":
             snake.push({x: head.x + size, y: head.y})
@@ -46,10 +43,12 @@ const moveSnake = () => {
         default:
             return
     }
+    snake.shift()
 }
 
 setInterval(() => {
     ctx.clearRect(0, 0, 600, 600)
     moveSnake()
     drawSnake()
+    
 }, 300)
