@@ -56,6 +56,7 @@ const moveSnake = () => {
 const gameLoop = () => {
     clearInterval(loopId)
     ctx.clearRect(0, 0, 600, 600)
+    drawnGrid()
     moveSnake()
     drawSnake()
 
@@ -64,6 +65,25 @@ const gameLoop = () => {
     }, 150)
 }
 
+const drawnGrid = () => {
+    ctx.lineWidth = 1
+    ctx.strokeStyle = "#191919"
+
+    for(let i = 30; i <= canvas.width; i+=30){
+        ctx.beginPath()
+        ctx.lineTo(i, 0)
+        ctx.lineTo(i, 600)
+        ctx.stroke()
+
+        ctx.beginPath()
+        ctx.lineTo(0, i)
+        ctx.lineTo(600, i)
+        ctx.stroke()
+    }
+}
+
+
+
 document.addEventListener("keydown", ({ key }) => {
     if((OPPOSITES[key] && OPPOSITES[key] !== direction)){
         direction = key
@@ -71,3 +91,4 @@ document.addEventListener("keydown", ({ key }) => {
 })
 
 gameLoop()
+
