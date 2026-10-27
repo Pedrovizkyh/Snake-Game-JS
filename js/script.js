@@ -9,6 +9,8 @@ const snake = [
     {x: 260, y: 200}
 ]
 
+let direction
+
 const drawSnake = () => {
     ctx.fillStyle = "#ddd"
 
@@ -20,4 +22,34 @@ const drawSnake = () => {
     })
 }
 
-drawSnake()
+const moveSnake = () => {
+    const head = snake[snake.length -1]
+    snake.shift()
+
+    switch (direction) {
+        case "right":
+            snake.push({x: head.x + size, y: head.y})
+            break;
+        
+        case "left":
+            snake.push({x: head.x - size, y: head.y})
+            break;
+
+        case "top":
+            snake.push({x: head.x, y: head.y - size})
+            break;
+
+        case "down":
+            snake.push({x: head.x, y: head.y + size})
+            break;
+    
+        default:
+            return
+    }
+}
+
+setInterval(() => {
+    ctx.clearRect(0, 0, 600, 600)
+    moveSnake()
+    drawSnake()
+}, 300)
