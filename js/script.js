@@ -111,6 +111,10 @@ const checkEat = () => {
     }
 }
 
+const gameOver = () => {
+    direction = undefined
+}
+
 const checkCollision = () => {
     const head = snake[snake.length - 1]
     const limit = canvas.width - size
@@ -121,7 +125,7 @@ const checkCollision = () => {
     )
 
     if(hitWall || hitSelf){
-        alert("Você perdeu!")
+        gameOver()
     }
 }
 
